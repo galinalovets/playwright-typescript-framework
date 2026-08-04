@@ -7,10 +7,10 @@ test('User can add a product to cart', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page).toHaveURL(/inventory.html/);
     const productBackpack = page
-    .locator('.inventory_item')
-    .filter({
-        hasText: 'Sauce Labs Backpack'
-    });
+        .locator('.inventory_item')
+        .filter({
+            hasText: 'Sauce Labs Backpack'
+        });
     const addToCartButton = productBackpack.getByTestId('add-to-cart-sauce-labs-backpack');
     await expect(addToCartButton).toBeVisible();
     await addToCartButton.click();
@@ -21,4 +21,14 @@ test('User can add a product to cart', async ({ page }) => {
     await expect(removeButton).toHaveText('Remove');
     const cartBadge = page.locator('.shopping_cart_badge');
     await expect(cartBadge).toHaveText('1');
+    await removeButton.click();
+    await removeButton.click();
+
+    const addButtonAfterRemove = productBackpack.getByTestId(
+        'add-to-cart-sauce-labs-backpack'
+    );
+
+    await expect(addButtonAfterRemove).toBeVisible();
+
+    await expect(cartBadge).toHaveCount(0);
 });
