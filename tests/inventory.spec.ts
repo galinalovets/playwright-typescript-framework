@@ -7,7 +7,7 @@ test('User can access inventory page after successful login', async ({ page }) =
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page).toHaveURL(/inventory.html/);
     await expect(
-        page.getByRole('heading', { name: 'Products' })
+        page.getByTestId('title')
     ).toBeVisible();
     await expect(page.locator('.inventory_item')).toHaveCount(6);
 })

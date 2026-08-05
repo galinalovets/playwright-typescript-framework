@@ -22,13 +22,9 @@ test('User can add a product to cart', async ({ page }) => {
     const cartBadge = page.locator('.shopping_cart_badge');
     await expect(cartBadge).toHaveText('1');
     await removeButton.click();
-    await removeButton.click();
-
     const addButtonAfterRemove = productBackpack.getByTestId(
         'add-to-cart-sauce-labs-backpack'
     );
-
     await expect(addButtonAfterRemove).toBeVisible();
-
     await expect(cartBadge).toHaveCount(0);
 });
