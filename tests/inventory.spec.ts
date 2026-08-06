@@ -1,13 +1,22 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { test } from '../fixtures/pages';
 
-test('User can access inventory page after successful login', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-    await page.getByPlaceholder('Username').fill('standard_user');
-    await page.getByPlaceholder('Password').fill('secret_sauce');
-    await page.getByRole('button', { name: 'Login' }).click();
+
+test('User can add product to cart', async ({ page, loginPage, inventoryPage, header }) => {
+     
+    await loginPage.open();
+
+    await loginPage.login(
+        'standard_user',
+        'secret_sauce'
+    );
+
     await expect(page).toHaveURL(/inventory.html/);
-    await expect(
-        page.getByTestId('title')
-    ).toBeVisible();
-    await expect(page.locator('.inventory_item')).toHaveCount(6);
+
+    await inventoryPage.addProductToCart(
+        'Sauce Labs Backpack'
+    );
+
+    await expect(header.cartBadge)
+        .toHaveText('1');
 })

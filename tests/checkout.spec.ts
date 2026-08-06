@@ -25,6 +25,7 @@ test('User can complete checkout with a product', async ({ page }) => {
     await expect(cartBadge).toHaveText('1');
     //Open cart
     await page.getByTestId('shopping-cart-link').click();
+    //await page.locator('.shopping_cart_link').click();
     await expect(page).toHaveURL(/cart.html/);
     const cartItem = page
         .getByTestId('inventory-item')
