@@ -1,14 +1,14 @@
 import { expect } from '@playwright/test';
-import { test } from '../fixtures/pages';
-import { LoginPage } from '../pages/LoginPage';
+import { test } from '@fixtures/pages';
+import { users } from '@data/users';
 
 test('User can login with valid credentials', async ({ loginPage, page }) => {
     
     await loginPage.open();
 
     await loginPage.login(
-        'standard_user',
-        'secret_sauce'
+        users.standard.username,
+        users.standard.password
     );
 
     await expect(page)

@@ -1,5 +1,5 @@
 import { Locator, Page } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { BasePage } from '@pages/BasePage';
 
 export class LoginPage extends BasePage {
 
@@ -32,9 +32,7 @@ export class LoginPage extends BasePage {
 
     async open(): Promise<void> {
 
-        await this.goto(
-            'https://www.saucedemo.com'
-        );
+        await this.goto();
 
     }
 

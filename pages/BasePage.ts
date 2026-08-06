@@ -6,16 +6,16 @@ export class BasePage {
 
     }
 
-    async goto(url: string): Promise<void> {
+    async goto(path: string = '/'): Promise<void> {
 
-        await this.page.goto(url);
+        await this.page.goto(path);
 
     }
 
     async reload(): Promise<void> {
         
         await this.page.reload();
-        
+
     }
 
 }

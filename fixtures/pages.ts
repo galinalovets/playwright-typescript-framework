@@ -1,7 +1,7 @@
 import { test as base } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { Header } from '../components/Header';
+import { LoginPage } from '@pages/LoginPage';
+import { InventoryPage } from '@pages/InventoryPage';
+import { Header } from '@components/Header';
 
 
 

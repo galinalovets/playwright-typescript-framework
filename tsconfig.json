@@ -1,13 +1,30 @@
 {
-    "compilerOptions": {
-      "target": "ESNext",
-      "module": "Node16",
-      "moduleResolution": "Node16",
-      "strict": true,
-      "types": ["node"]
-    },
-    "include": [
-      "tests",
-      "playwright.config.ts"
-    ]
-  }
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "strict": true,
+    "types": [
+      "node"
+    ],
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@fixtures/*": [
+        "fixtures/*"
+      ],
+      "@data/*": [
+        "data/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}
