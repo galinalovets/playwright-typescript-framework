@@ -37,8 +37,7 @@ An end-to-end test automation framework built with Playwright and TypeScript, fo
 
 ## Example: Page Object Model
 
-```
-
+```typescript
 // pages/InventoryPage.ts
 
 export class InventoryPage extends BasePage {
@@ -62,19 +61,6 @@ export class InventoryPage extends BasePage {
             .click();
     }
 }
-```
-
-```typescript
-// tests/login.spec.ts
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-
-test('user can log in with valid credentials', async ({ page }) => {
-  const loginPage = new LoginPage(page);
-  await page.goto('/login');
-  await loginPage.login('testuser', 'securepassword');
-  await expect(page).toHaveURL('/dashboard');
-});
 ```
 
 ## Tech stack
