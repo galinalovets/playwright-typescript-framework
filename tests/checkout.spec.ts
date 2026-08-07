@@ -1,72 +1,63 @@
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/pages';
-import { users } from '@data/users';
 import { products } from '@data/products';
 import { customer } from '@data/customer';
 
-test('User can complete checkout with a product', async ({ page, loginPage, inventoryPage, header }) => {
-    
-    //Login
+test('User can complete checkout with a product', async ({
+    page,
+    inventoryPage,
+    cartPage,
+    checkoutPage,
+    header }) => {
 
-    await loginPage.goto();
-    
-    await loginPage.login(
-        users.standard.username,
-        users.standard.password
-    );
+    await page.goto('/inventory.html');
 
     await expect(page).toHaveURL(/inventory.html/);
-
-    //Add product
 
     await inventoryPage.addProductToCart(products.backpack.name);
 
     await expect(header.cartBadge).toHaveText('1');
 
-    const productBackpack = page
-        .locator('.inventory_item')
-        .filter({
-            hasText: products.backpack.name
-        });
-    
-    const removeButton = productBackpack.getByTestId(
-        'remove-sauce-labs-backpack'
-    );
-    await expect(removeButton).toBeVisible();
-    await expect(removeButton).toHaveText('Remove');
-    
-    //Open cart
+    await expect(
+        inventoryPage.getProductButton(products.backpack.name)
+    ).toHaveText('Remove');
 
-    await page.getByTestId('shopping-cart-link').click();
-    //await page.locator('.shopping_cart_link').click();
+    await header.openCart();
+
     await expect(page).toHaveURL(/cart.html/);
-    const cartItem = page
-        .getByTestId('inventory-item')
-        .filter({
-            hasText: products.backpack.name
-        });
+
+    const cartItem = cartPage.getCartItem(products.backpack.name);
+
     await expect(cartItem).toHaveCount(1);
     await expect(cartItem).toBeVisible();
-    
-    //Checkout
 
-    await page.getByTestId('checkout').click();
+    await cartPage.clickCheckout();
+
     await expect(page).toHaveURL(/checkout-step-one.html/);
-    await page.getByPlaceholder('First Name').fill(customer.default.firstName);
-    await page.getByPlaceholder('Last Name').fill(customer.default.lastName);
-    await page.getByPlaceholder('Zip/Postal Code').fill(customer.default.zipCode);
-    await page.getByTestId('continue').click();
+
+    await checkoutPage.fillCheckoutInformation(
+        customer.default.firstName,
+        customer.default.lastName,
+        customer.default.zipCode
+    );
+
+    await checkoutPage.continueCheckout();
+
     await expect(page).toHaveURL(/checkout-step-two.html/);
-    await expect(page
-        .getByTestId('inventory-item')
-        .filter({
-            hasText: products.backpack.name
-        })
-    ).toBeVisible();
+
+    const orderItem = checkoutPage.getOrderItem(
+        products.backpack.name
+    );
+
+    await expect(orderItem).toBeVisible();
+    await expect(orderItem).toHaveCount(1);
 
     //Finish order
 
-    await page.getByTestId('finish').click();
+    await checkoutPage.finishCheckout();
+
     await expect(page).toHaveURL(/checkout-complete.html/);
-    await expect(page.getByTestId('complete-header')).toHaveText('Thank you for your order!');
+
+    await expect(checkoutPage.completeHeader)
+        .toHaveText('Thank you for your order!');
 });

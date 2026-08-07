@@ -18,7 +18,7 @@ export class InventoryPage extends BasePage {
 
         return this.products.filter({
             hasText: productName
-        
+
         });
     }
 
@@ -35,4 +35,22 @@ export class InventoryPage extends BasePage {
             .click();
 
     }
+
+    async removeProductFromCart(productName: string): Promise<void> {
+
+        const product = this.getProduct(productName);
+
+        const removeButton = product.getByRole('button', {
+            name: 'Remove'
+        });
+
+        await removeButton.click();
+
+    }
+
+    getProductButton(productName: string): Locator {
+        return this.getProduct(productName)
+            .getByRole('button');
+    }
+
 }
