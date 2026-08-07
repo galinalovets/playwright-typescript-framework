@@ -15,45 +15,52 @@ An end-to-end test automation framework built with Playwright and TypeScript, fo
 | Page Object Model | ✅ Done |
 | Login tests | ✅ Done |
 | Cart tests | ✅ Done |
-| Fixtures | 🚧 In progress |
-| API testing | 🚧 In progress |
-| Reporting | ⬜ Planned |
-| CI pipeline | ⬜ Planned |
+| Checkout flow | ✅ Done |
+| Fixtures | ✅ Done |
+| Authentication with storageState | ✅ Done |
+| GitHub Actions CI | ✅ Done |
+| HTML reporting | ✅ Done |
+| API testing | 🚧 Planned |
 
 ## Project structure
 
 ```
-tests/         # test specs
-pages/         # Page Object Model classes
-fixtures/      # custom Playwright fixtures (in progress)
-utils/         # shared helpers
-test-data/     # test data files
+├── components/ # reusable UI components
+├── data/ # test data
+├── fixtures/ # custom Playwright fixtures
+├── pages/ # Page Object Model classes
+├── tests/ # test scenarios
+├── auth.setup.ts # authentication setup
+├── playwright.config.ts
+└── package.json
 ```
 
 ## Example: Page Object Model
 
-```typescript
-// pages/LoginPage.ts
-import { Page, Locator } from '@playwright/test';
+```
 
-export class LoginPage {
-  readonly page: Page;
-  readonly usernameInput: Locator;
-  readonly passwordInput: Locator;
-  readonly submitButton: Locator;
+// pages/InventoryPage.ts
 
-  constructor(page: Page) {
-    this.page = page;
-    this.usernameInput = page.getByLabel('Username');
-    this.passwordInput = page.getByLabel('Password');
-    this.submitButton = page.getByRole('button', { name: 'Log in' });
-  }
+export class InventoryPage extends BasePage {
 
-  async login(username: string, password: string) {
-    await this.usernameInput.fill(username);
-    await this.passwordInput.fill(password);
-    await this.submitButton.click();
-  }
+    readonly products: Locator;
+
+    constructor(page: Page) {
+        super(page);
+        this.products = page.locator('.inventory_item');
+    }
+
+    getProduct(productName: string): Locator {
+        return this.products.filter({
+            hasText: productName
+        });
+    }
+
+    async addProductToCart(productName: string) {
+        await this.getProduct(productName)
+            .getByRole('button', { name: 'Add to cart' })
+            .click();
+    }
 }
 ```
 
@@ -75,11 +82,16 @@ test('user can log in with valid credentials', async ({ page }) => {
 - [Playwright](https://playwright.dev/)
 - TypeScript
 - Node.js
-- GitHub Actions (CI — in progress)
+- GitHub Actions (CI/CD)
+- HTML Test Reports
+
 
 ## Getting started
 
+Install dependencies:
+
 ```bash
+npm ci
 npm install
 npx playwright install
 npx playwright test
@@ -87,7 +99,18 @@ npx playwright test
 
 ## Roadmap
 
-Next up: fixtures for reusable test setup, API-level test coverage, HTML reporting, and a working CI pipeline that runs the suite on every push. Follow along or open an issue with suggestions.
+Completed:
+- Page Object Model architecture
+- Reusable fixtures
+- Authentication with storageState
+- GitHub Actions CI pipeline
+- End-to-end checkout flow
 
+Next:
+- API testing with Playwright request
+- Improve reporting
+- Add more complex test scenarios
+- Framework optimization
+  
 ---
 Built by [Halina Lavets](https://github.com/galinalovets) — Senior QA Engineer moving into test automation.
