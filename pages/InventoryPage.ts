@@ -10,7 +10,7 @@ export class InventoryPage extends BasePage {
         super(page);
 
         this.products =
-            this.page.locator('.inventory_item');
+            this.page.getByTestId('inventory-item');
 
     }
 
