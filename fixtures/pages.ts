@@ -4,7 +4,8 @@ import { InventoryPage } from '@pages/InventoryPage';
 import { Header } from '@components/Header';
 import { CartPage } from '@pages/CartPage';
 import { CheckoutPage } from '@pages/CheckoutPage';
-
+import { UsersApi } from 'tests/api/users.api';
+import { PostsApi } from 'tests/api/posts.api';
 
 
 export const test = base.extend<{
@@ -13,6 +14,8 @@ export const test = base.extend<{
     cartPage: CartPage;
     checkoutPage: CheckoutPage;
     header: Header;
+    usersApi: UsersApi;
+    postsApi: PostsApi;
 }>({
 
     loginPage: async ({ page }, use) => {
@@ -33,6 +36,14 @@ export const test = base.extend<{
 
     header: async ({ page }, use) => {
         await use(new Header(page));
-    }
+    },
+
+    usersApi: async ({ request }, use) => {
+        await use(new UsersApi(request));
+    },
+
+    postsApi: async ({ request }, use) => {
+        await use(new PostsApi(request));
+    },
 
 });
