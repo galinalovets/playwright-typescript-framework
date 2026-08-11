@@ -1,5 +1,5 @@
 import { APIRequestContext } from '@playwright/test';
-import { API_BASE_URL, CreatePostRequest, CreatePostResponse } from '@data/api';
+import { API_BASE_URL, CreatePostRequest} from '@data/api';
 
 export class PostsApi {
     constructor(private request: APIRequestContext) {}
@@ -8,5 +8,15 @@ export class PostsApi {
         return this.request.post(`${API_BASE_URL}/posts`, {
             data,
         });
+    }
+
+    async updatePost(id: number, data: CreatePostRequest) {
+        return this.request.put(`${API_BASE_URL}/posts/${id}`, {
+            data,
+        });
+    }
+
+    async deletePost(id: number) {
+        return this.request.delete(`${API_BASE_URL}/posts/${id}`);
     }
 }
