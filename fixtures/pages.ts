@@ -4,8 +4,11 @@ import { InventoryPage } from '@pages/InventoryPage';
 import { Header } from '@components/Header';
 import { CartPage } from '@pages/CartPage';
 import { CheckoutPage } from '@pages/CheckoutPage';
-import { UsersApi } from 'tests/api/users.api';
-import { PostsApi } from 'tests/api/posts.api';
+import { UsersApi } from 'tests/api/clients/users.api';
+import { PostsApi } from 'tests/api/clients/posts.api';
+import { APIRequestContext } from '@playwright/test';
+import { ApiClient } from 'tests/api/clients/api.client';
+import { API_BASE_URL } from '@data/api';
 
 
 export const test = base.extend<{
@@ -14,6 +17,7 @@ export const test = base.extend<{
     cartPage: CartPage;
     checkoutPage: CheckoutPage;
     header: Header;
+    apiRequest: APIRequestContext;
     usersApi: UsersApi;
     postsApi: PostsApi;
 }>({
@@ -38,12 +42,24 @@ export const test = base.extend<{
         await use(new Header(page));
     },
 
-    usersApi: async ({ request }, use) => {
-        await use(new UsersApi(request));
+    apiRequest: async ({ playwright }, use) => {
+        const apiRequest = await playwright.request.newContext({
+            baseURL: API_BASE_URL,
+        });
+
+        await use(apiRequest);
+
+        await apiRequest.dispose();
+    },
+    
+    usersApi: async ({ apiRequest }, use) => {
+        const apiClient = new ApiClient(apiRequest);
+        await use(new UsersApi(apiClient));
     },
 
-    postsApi: async ({ request }, use) => {
-        await use(new PostsApi(request));
+    postsApi: async ({ apiRequest }, use) => {
+        const apiClient = new ApiClient(apiRequest);
+        await use(new PostsApi(apiClient));
     },
 
 });
