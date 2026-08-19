@@ -11,5 +11,8 @@
   "devDependencies": {
     "@playwright/test": "^1.62.0",
     "@types/node": "^26.1.2"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
   }
 }

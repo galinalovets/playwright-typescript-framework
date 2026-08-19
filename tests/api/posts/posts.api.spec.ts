@@ -1,3 +1,4 @@
+import { CreatePostResponseSchema, PostSchema } from '@data/api.schemas';
 import { test } from '@fixtures/pages';
 import { expect } from '@playwright/test';
 
@@ -10,10 +11,10 @@ test('GET post by id', async ({ postsApi }) => {
 
     const body = await response.json();
 
-    expect(body.id).toBe(1);
-    expect(body.userId).toBe(1);
-    expect(body.title).toEqual(expect.any(String));
-    expect(body.body).toEqual(expect.any(String));
+    const post = PostSchema.parse(body);
+
+    expect(post.id).toBe(1);
+    expect(post.userId).toBe(1);
 
 });
 
@@ -30,12 +31,11 @@ test('POST create new post', async ({ postsApi }) => {
 
     const body = await response.json();
 
-    expect(body).toMatchObject({
-        title: 'Playwright API test',
-        body: 'Created using API automation',
-        userId: 1
-    });
-    expect(body.id).toEqual(expect.any(Number));
+    const post = CreatePostResponseSchema.parse(body);
+
+    expect(post.title).toBe('Playwright API test');
+    expect(post.body).toBe('Created using API automation');
+    expect(post.userId).toBe(1);
 
 });
 
