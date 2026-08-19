@@ -1,5 +1,5 @@
 import { ApiClient } from './api.client';
-import { CreatePostRequest} from '@data/api';
+import { CreatePostRequest } from '@data/api';
 
 export class PostsApi {
     constructor(private apiClient: ApiClient) {}
