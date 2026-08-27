@@ -4,7 +4,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)
 
-An end-to-end test automation framework built with Playwright and TypeScript, following the Page Object Model. This is a learning-in-public project: I'm building it out feature by feature as I move from manual QA into automation, and documenting the process here.
+An end-to-end test automation framework built with Playwright and TypeScript, following the Page Object Model. This is a learning-in-public project: I'm building it out feature by feature, developing deeper expertise in test automation and quality engineering, and documenting the process here.
 
 ## Status
 
@@ -20,17 +20,23 @@ An end-to-end test automation framework built with Playwright and TypeScript, fo
 | Authentication with storageState | ✅ Done |
 | GitHub Actions CI | ✅ Done |
 | HTML reporting | ✅ Done |
-| API testing | 🚧 Planned |
+| API testing | ✅ Done |
+| API response validation | ✅ Done |
 
 ## Project structure
 
 ```
-├── components/ # reusable UI components
-├── data/ # test data
-├── fixtures/ # custom Playwright fixtures
-├── pages/ # Page Object Model classes
-├── tests/ # test scenarios
-├── auth.setup.ts # authentication setup
+├── components/              # reusable UI components
+├── data/                    # test data
+│   └── api.schemas.ts       # Zod schemas for API responses
+├── fixtures/                # custom Playwright fixtures
+├── pages/                   # Page Object Model classes
+├── tests/
+│   └── api/
+│       ├── clients/         # API client classes
+│       ├── posts/           # Posts API tests
+│       └── users/           # Users API tests
+├── auth.setup.ts            # authentication setup
 ├── playwright.config.ts
 └── package.json
 ```
@@ -68,7 +74,10 @@ export class InventoryPage extends BasePage {
 - [Playwright](https://playwright.dev/)
 - TypeScript
 - Node.js
+- API testing
+- Zod
 - GitHub Actions (CI/CD)
+- Git / GitHub
 - HTML Test Reports
 
 
@@ -78,7 +87,6 @@ Install dependencies:
 
 ```bash
 npm ci
-npm install
 npx playwright install
 npx playwright test
 ```
@@ -91,12 +99,14 @@ Completed:
 - Authentication with storageState
 - GitHub Actions CI pipeline
 - End-to-end checkout flow
+- API testing with Playwright API
 
 Next:
-- API testing with Playwright request
-- Improve reporting
-- Add more complex test scenarios
-- Framework optimization
-  
+- Expand API test coverage
+- Authentication / authorization testing
+- Advanced API scenarios
+- Improve test data management
+- Explore mocking and network interception
+
 ---
-Built by [Halina Lavets](https://github.com/galinalovets) — Senior QA Engineer moving into test automation.
+Built by [Halina Lavets](https://github.com/galinalovets) — Senior QA Engineer building and expanding my automation skills.
