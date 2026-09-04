@@ -15,3 +15,15 @@ export const CreatePostResponseSchema = z.object({
     body: z.string(),
     userId: z.number(),
 });
+
+export const TaskSchema = z.object({
+    id: z.string(),
+    userId: z.string(),
+    title: z.string(),
+    description: z.string(),
+    status: z.string(),
+    priority: z.string(),
+    position: z.number(),
+    createdAt: z.string().datetime(),
+    updatedAt: z.string().datetime(),
+});
