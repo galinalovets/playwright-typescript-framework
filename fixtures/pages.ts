@@ -8,7 +8,9 @@ import { UsersApi } from 'tests/api/clients/users.api';
 import { PostsApi } from 'tests/api/clients/posts.api';
 import { APIRequestContext } from '@playwright/test';
 import { ApiClient } from 'tests/api/clients/api.client';
-import { API_BASE_URL } from '@data/api';
+import { API_BASE_URL, UPEX_DOJO_BASE_URL } from '@data/api';
+import { TasksApi } from 'tests/api/clients/task.api';
+import { AuthApi } from 'tests/api/clients/auth.api';
 
 
 export const test = base.extend<{
@@ -18,8 +20,12 @@ export const test = base.extend<{
     checkoutPage: CheckoutPage;
     header: Header;
     apiRequest: APIRequestContext;
+    dojoApiRequest: APIRequestContext;
+    authenticatedDojoApiRequest: APIRequestContext;
     usersApi: UsersApi;
     postsApi: PostsApi;
+    tasksApi: TasksApi;
+    authApi: AuthApi;
 }>({
 
     loginPage: async ({ page }, use) => {
@@ -51,6 +57,46 @@ export const test = base.extend<{
 
         await apiRequest.dispose();
     },
+
+    dojoApiRequest: async ({ playwright }, use) => {
+        const apiRequest = await playwright.request.newContext({
+            baseURL: UPEX_DOJO_BASE_URL,
+        });
+
+        await use(apiRequest);
+
+        await apiRequest.dispose();
+    },
+
+    authenticatedDojoApiRequest: async ({ playwright }, use) => {
+        // login
+        const loginRequest = await playwright.request.newContext({
+            baseURL: UPEX_DOJO_BASE_URL,
+        });
+
+        const loginResponse = await loginRequest.post('/api/auth/login', {
+            data: {
+                email: 'testuser@upex.dev',
+                password: 'Test123!',
+            },
+        });
+
+        const { access_token } = await loginResponse.json();
+
+        await loginRequest.dispose();
+
+        // authenticated context
+        const apiRequest = await playwright.request.newContext({
+            baseURL: UPEX_DOJO_BASE_URL,
+            extraHTTPHeaders: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        await use(apiRequest);
+
+        await apiRequest.dispose();
+    },
     
     usersApi: async ({ apiRequest }, use) => {
         const apiClient = new ApiClient(apiRequest);
@@ -60,6 +106,16 @@ export const test = base.extend<{
     postsApi: async ({ apiRequest }, use) => {
         const apiClient = new ApiClient(apiRequest);
         await use(new PostsApi(apiClient));
+    },
+
+    tasksApi: async ({ authenticatedDojoApiRequest }, use) => {
+        const apiClient = new ApiClient(authenticatedDojoApiRequest);
+        await use(new TasksApi(apiClient));
+    },
+
+    authApi: async ({ dojoApiRequest }, use) => {
+        const apiClient = new ApiClient(dojoApiRequest);
+        await use(new AuthApi(apiClient));
     },
 
 });
