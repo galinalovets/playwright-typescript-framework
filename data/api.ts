@@ -21,3 +21,11 @@ export interface CreateTaskRequest {
     priority: "medium";
     status: "backlog";
 }
+
+export interface UpdateTaskRequest {
+    title: string;
+    description: string;
+    priority: "medium";
+    status: "backlog";
+    position: 0;
+}
