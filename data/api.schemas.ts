@@ -27,3 +27,8 @@ export const TaskSchema = z.object({
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
 });
+
+export const DeleteTaskResponseSchema = z.object({
+    message: z.string(),
+});
+
