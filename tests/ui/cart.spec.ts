@@ -24,13 +24,13 @@ test.describe('Cart', () => {
 
         await test.step('Add product to cart and verify cart', async () => {
             const addToCartButton =
-                inventoryPage.getProductButton(products.backpack.name);
+                inventoryPage.getAddToCartButton(products.backpack.name);
 
             await expect(addToCartButton).toBeEnabled();
 
             await inventoryPage.addProductToCart(products.backpack.name);
 
-            const removeButton = inventoryPage.getProductButton(products.backpack.name);
+            const removeButton = inventoryPage.getRemoveButton(products.backpack.name);
 
             await expect(removeButton).toBeVisible();
 

@@ -48,9 +48,18 @@ export class InventoryPage extends BasePage {
 
     }
 
-    getProductButton(productName: string): Locator {
+    getAddToCartButton(productName: string): Locator {
         return this.getProduct(productName)
-            .getByRole('button');
+            .getByRole('button', {
+                name: 'Add to cart'
+            });
+    }
+
+    getRemoveButton(productName: string): Locator {
+        return this.getProduct(productName)
+            .getByRole('button', {
+                name: 'Remove'
+            });
     }
 
 }
