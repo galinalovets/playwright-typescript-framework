@@ -19,13 +19,20 @@ export const test = base.extend<{
     cartPage: CartPage;
     checkoutPage: CheckoutPage;
     header: Header;
+
     apiRequest: APIRequestContext;
     dojoApiRequest: APIRequestContext;
     authenticatedDojoApiRequest: APIRequestContext;
+
     usersApi: UsersApi;
     postsApi: PostsApi;
     tasksApi: TasksApi;
     authApi: AuthApi;
+
+    taskCleanup: {
+        add: (taskId: string) => void;
+        remove: (taskId: string) => void;
+    };
 }>({
 
     loginPage: async ({ page }, use) => {
@@ -111,6 +118,36 @@ export const test = base.extend<{
     tasksApi: async ({ authenticatedDojoApiRequest }, use) => {
         const apiClient = new ApiClient(authenticatedDojoApiRequest);
         await use(new TasksApi(apiClient));
+    },
+
+    taskCleanup: async ({ tasksApi }, use) => {
+        const taskIds = new Set<string>();
+    
+        const cleanup = {
+            add: (taskId: string) => {
+                taskIds.add(taskId);
+            },
+    
+            remove: (taskId: string) => {
+                taskIds.delete(taskId);
+            },
+        };
+    
+        await use(cleanup);
+    
+        for (const taskId of taskIds) {
+            try {
+                const response = await tasksApi.deleteTask(taskId);
+    
+                if (!response.ok()) {
+                    console.warn(
+                        `Cleanup failed for task ${taskId}: ${response.status()}`
+                    );
+                }
+            } catch (error) {
+                console.warn(`Cleanup failed for task ${taskId}:`, error);
+            }
+        }
     },
 
     authApi: async ({ dojoApiRequest }, use) => {

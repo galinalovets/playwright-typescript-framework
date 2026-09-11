@@ -26,6 +26,6 @@ export interface UpdateTaskRequest {
     title: string;
     description: string;
     priority: "medium";
-    status: "backlog";
+    status: "backlog" | "in_progress" | "done";
     position: 0;
 }
