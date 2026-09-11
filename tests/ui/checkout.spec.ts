@@ -24,7 +24,7 @@ test.describe('Checkout', () => {
             await expect(header.cartBadge).toHaveText('1');
 
             await expect(
-                inventoryPage.getProductButton(products.backpack.name)
+                inventoryPage.getRemoveButton(products.backpack.name)
             ).toHaveText('Remove');
         });
 
